@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
-  
+
   api_version(module: 'api/v1', path: { value: 'api/v1' }, defaults: { format: :json }) do
     devise_for :users, singular: :user,
                        path_names: {
@@ -21,6 +21,13 @@ Rails.application.routes.draw do
     resource :users do
       get :current
     end
+
+    resources :notes, only: %i[index show create] do
+      collection do
+        get :async, to: 'notes#index_async'
+      end
+    end
+
   end
 
   get '/async_request/jobs/:id', to: 'async_request/jobs#show'
