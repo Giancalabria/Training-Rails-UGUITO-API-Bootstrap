@@ -8,6 +8,7 @@ class Note < ApplicationRecord
   belongs_to :book
 
   def word_count
+    return 0 if content.blank?
     content.split.length
   end
 

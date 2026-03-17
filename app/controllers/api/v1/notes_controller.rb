@@ -11,7 +11,6 @@ module Api
         render json: notes_filtered, status: :ok, each_serializer: IndexNoteAsyncSerializer
       end
 
-
       def show
         render json: Note.find(params[:id]), status: :ok, serializer: ShowNoteSerializer
       end
@@ -32,7 +31,7 @@ module Api
       end
 
       def order_param
-        params[:order] || 'created_at DESC'
+        params[:order] || 'created_at ASC'
       end
 
       def note_params
