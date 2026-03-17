@@ -8,6 +8,18 @@ class ApplicationController < ActionController::Base
 
   private
 
+  def render_error(identifier, message: nil, meta: nil, status: :bad_request)
+    resolved_message =
+      message.presence ||
+      I18n.t("errors.messages.#{identifier}", default: identifier.to_s)
+
+    error = { message: resolved_message, identifier: identifier.to_s }
+    error[:meta] = meta if meta.present?
+
+    render json: { errors: [error] }, status: status
+  end
+
+
   def utility_code_header
     @utility_code_header ||= request.headers['Utility-ID']
   end
@@ -25,16 +37,43 @@ class ApplicationController < ActionController::Base
   end
 
   def validation_error(resource)
-    render json: {
-      errors: [
-        {
-          status: '400',
-          title: 'Bad Request',
-          detail: resource.errors,
-          code: '100'
-        }
-      ]
-    }, status: :bad_request
+    details = resource.errors.details
+
+    blank_fields =
+      details.select { |_attr, errs| errs.any? { |e| e[:error] == :blank } }.keys.map(&:to_s)
+
+    if blank_fields.any?
+      return render_error(
+        :missing_required_fields,
+        message: "Missing required fields: #{blank_fields.join(', ')}",
+        meta: { fields: blank_fields },
+        status: :bad_request
+      )
+    end
+
+    if details[:note_type]&.any? { |e| e[:error] == :inclusion }
+      return render_error(
+        :invalid_note_type,
+        message: 'El tipo de nota no es válido',
+        meta: { allowed: Note.note_types.keys },
+        status: :unprocessable_entity
+      )
+    end
+
+    if resource.errors[:content].any? { |msg| msg.to_s.include?('words long or less') }
+      limit = resource.user.utility.class.name == 'NorthUtility' ? 50 : 60
+      return render_error(
+        :content_too_long,
+        message: "Una resena no puede superar las #{limit} palabras",
+        status: :unprocessable_entity
+      )
+    end
+
+    render_error(
+      :unprocessable_entity,
+      message: resource.errors.full_messages.first || 'Validation failed',
+      status: :unprocessable_entity
+    )
   end
 
   def render_resource(resource)

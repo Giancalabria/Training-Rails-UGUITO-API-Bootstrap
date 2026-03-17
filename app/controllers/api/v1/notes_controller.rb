@@ -16,8 +16,9 @@ module Api
       end
 
       def create
-        note = Note.create(note_params)
-        render json: note, status: :created
+        note = current_user.notes.new(note_params)
+        note.save
+        render_resource(note)
       end
 
       private
@@ -31,11 +32,11 @@ module Api
       end
 
       def order_param
-        params[:order] || 'created_at ASC'
+        params[:order] || 'created_at DESC'
       end
 
       def note_params
-        params.require(:note).permit(:title, :content, :note_type, :user_id, :book_id)
+        params.require(:note).permit(:title, :content, :note_type, :book_id)
       end
     end
   end
