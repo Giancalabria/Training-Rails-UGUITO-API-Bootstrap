@@ -34,12 +34,8 @@ class Note < ApplicationRecord
   end
 
   def review_length
-    return unless note_type == 'review'
-
-    limit = user.utility.class.name == 'NorthUtility' ? 50 : 60
-
-    if word_count > limit
-      errors.add(:content, "must be #{limit} words long or less for review notes")
+    if note_type == 'review' && content_length != 'short'
+      errors.add(:content, "must be short for review notes")
     end
   end
 end
