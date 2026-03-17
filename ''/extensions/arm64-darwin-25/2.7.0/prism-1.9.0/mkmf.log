@@ -1,0 +1,39 @@
+find_header: checking for prism.h in /Users/gianluca-calabria/Software/Training/Training-Rails-UGUITO-API-Bootstrap/''/gems/prism-1.9.0/include... -------------------- no
+
+"clang -o conftest -I/Users/gianluca-calabria/.rbenv/versions/2.7.6/include/ruby-2.7.0/arm64-darwin25 -I/Users/gianluca-calabria/.rbenv/versions/2.7.6/include/ruby-2.7.0/ruby/backward -I/Users/gianluca-calabria/.rbenv/versions/2.7.6/include/ruby-2.7.0 -I. -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT   -g -O2 -fno-common -pipe conftest.c  -L. -L/Users/gianluca-calabria/.rbenv/versions/2.7.6/lib -L. -fstack-protector-strong  -m64   -lruby.2.7   "
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: int main(int argc, char **argv)
+4: {
+5:   return !!argv[argc];
+6: }
+/* end */
+
+"clang -E -I/Users/gianluca-calabria/.rbenv/versions/2.7.6/include/ruby-2.7.0/arm64-darwin25 -I/Users/gianluca-calabria/.rbenv/versions/2.7.6/include/ruby-2.7.0/ruby/backward -I/Users/gianluca-calabria/.rbenv/versions/2.7.6/include/ruby-2.7.0 -I. -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT   -g -O2 -fno-common -pipe  conftest.c -o conftest.i"
+conftest.c:3:10: fatal error: 'prism.h' file not found
+    3 | #include <prism.h>
+      |          ^~~~~~~~~
+1 error generated.
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: #include <prism.h>
+/* end */
+
+"clang -E -I/Users/gianluca-calabria/.rbenv/versions/2.7.6/include/ruby-2.7.0/arm64-darwin25 -I/Users/gianluca-calabria/.rbenv/versions/2.7.6/include/ruby-2.7.0/ruby/backward -I/Users/gianluca-calabria/.rbenv/versions/2.7.6/include/ruby-2.7.0 -I. -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT   -g -O2 -fno-common -pipe -I/Users/gianluca-calabria/Software/Training/Training-Rails-UGUITO-API-Bootstrap/''/gems/prism-1.9.0/include conftest.c -o conftest.i"
+conftest.c:3:10: fatal error: 'prism.h' file not found
+    3 | #include <prism.h>
+      |          ^~~~~~~~~
+1 error generated.
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: #include <prism.h>
+/* end */
+
+--------------------
+
