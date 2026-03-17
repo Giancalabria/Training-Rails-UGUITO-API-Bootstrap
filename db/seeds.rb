@@ -2,11 +2,6 @@
 # with its default values.
 # The data can then be loaded with the rails db:seed command
 # (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
-#   Character.create(name: 'Luke', movie: movies.first)
 
 # Admin User
 FactoryBot.create(:admin_user, email: 'admin@example.com', password: 'password',
@@ -30,8 +25,10 @@ FactoryBot.create(:user, utility: north_utility, email: 'test_north@widergy.com'
 
 User.all.find_each do |user|
   random_books_amount = [1, 2, 3].sample
-  FactoryBot.create_list(:book, random_books_amount, user: user, utility: user.utility)
+  books = FactoryBot.create_list(:book, random_books_amount, user: user, utility: user.utility)
 
-  random_notes_amount = [1, 2, 3].sample
-  FactoryBot.create_list(:note, random_notes_amount, user: user)
+  books.each do |book|
+    random_notes_amount = [1, 2, 3].sample
+    FactoryBot.create_list(:note, random_notes_amount, user: user, book: book)
+  end
 end

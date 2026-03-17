@@ -2,16 +2,16 @@ module Api
   module V1
     class NotesController < ApplicationController
       def index
-        render json: notes_filtered, status: :ok
+        render json: notes_filtered, status: :ok, each_serializer: IndexNoteSerializer
       end
 
       def index_async
-        response = execute_async(Note.all)
-        render json: response, status: :ok
+        render json: notes_filtered, status: :ok, each_serializer: IndexNoteAsyncSerializer
       end
 
+
       def show
-        render json: Note.find(params[:id]), status: :ok
+        render json: Note.find(params[:id]), status: :ok, serializer: ShowNoteSerializer
       end
 
       def create
@@ -26,7 +26,7 @@ module Api
       end
 
       def filtering_params
-        params.permit(:note_type)
+        params.permit(:note_type, :book_id)
       end
 
       def order_param
@@ -34,7 +34,7 @@ module Api
       end
 
       def note_params
-        params.require(:note).permit(:title, :content, :note_type, :user_id)
+        params.require(:note).permit(:title, :content, :note_type, :user_id, :book_id)
       end
     end
   end

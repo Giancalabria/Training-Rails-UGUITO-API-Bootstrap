@@ -5,6 +5,7 @@ class Note < ApplicationRecord
   validate :review_length
 
   belongs_to :user
+  belongs_to :book
 
   def word_count
     content.split.length

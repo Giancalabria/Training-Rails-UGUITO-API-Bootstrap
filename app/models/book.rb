@@ -20,4 +20,5 @@ class Book < ApplicationRecord
 
   belongs_to :utility
   belongs_to :user
+  has_many :notes, dependent: :destroy
 end
