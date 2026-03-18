@@ -27,6 +27,13 @@ class Utility < ApplicationRecord
   validates :name, uniqueness: true
   validates :name, :type, presence: true
 
+  validates :short_note_length, :long_note_length,
+            presence: true,
+            numericality: { only_integer: true, greater_than: 0 }
+
+  validates :short_note_length, numericality: { less_than: :long_note_length }
+  validates :long_note_length, numericality: { greater_than: :short_note_length }
+
   store_accessor :integration_urls, :external_api_authentication_url, :books_data_url,
                  :notes_data_url
 
