@@ -53,3 +53,5 @@ coverage/*
 # Ignore log files
 spec/dummy/log/test.log
 spec/dummy/log/development.log
+
+bin/*
