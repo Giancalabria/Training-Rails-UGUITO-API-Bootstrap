@@ -27,8 +27,7 @@ class Utility < ApplicationRecord
   validates :name, uniqueness: true
   validates :name, :type, presence: true
 
-  store_accessor :integration_urls, :external_api_authentication_url, :books_data_url,
-                 :notes_data_url
+  store_accessor :integration_urls, :external_api_authentication_url, :books_data_url
 
   def generate_entity_code
     return if code.present? && !code.to_i.zero?
@@ -73,8 +72,6 @@ class Utility < ApplicationRecord
   def clean_name
     self.class.name.underscore.split('_').first
   end
-
-  def note_length; end
 
   private
 

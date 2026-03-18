@@ -31,11 +31,3 @@
 
 es:
   hello: "Hola Mundo!"
-  errors:
-    messages:
-      service_unavailable: "Servicio no disponible"
-      utility_service_unavailable: "El servicio de la utility no está disponible"
-      form_response_manager_service_unavailable: "El servicio no está disponible"
-      gateway_timeout: "Tiempo de espera agotado"
-      internal_server_error: "Error interno del servidor"
-      circuit_open_error: "Servicio temporalmente deshabilitado"

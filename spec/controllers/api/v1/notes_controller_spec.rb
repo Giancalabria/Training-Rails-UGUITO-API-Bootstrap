@@ -5,8 +5,7 @@ describe Api::V1::NotesController, type: :controller do
     context 'when the user is authenticated' do
       include_context 'with authenticated user'
 
-      let!(:notes_amount) { Faker::Number.between(from: 1, to: 10) }
-      let(:user_notes) { create_list(:note, notes_amount, user: user) }
+      let(:user_notes) { create_list(:note, 10, user: user) }
 
       let!(:expected) do
         ActiveModel::Serializer::CollectionSerializer.new(notes_expected,
@@ -16,10 +15,10 @@ describe Api::V1::NotesController, type: :controller do
       context 'when fetching all notes from the user' do
         let(:notes_expected) { user_notes }
 
-        before { get :index, params: { order: 'created_at ASC' } }
+        before { get :index }
 
         it 'responds with the expected notes' do
-          expect(response.body).to eq(expected)
+          expect(response_body.to_json).to eq(expected)
         end
 
         it 'responds with 200 status' do
@@ -28,13 +27,12 @@ describe Api::V1::NotesController, type: :controller do
       end
 
       context 'when fetching notes with pagination' do
-        let(:notes_page_amount) { Faker::Number.between(from: 1, to: notes_amount) }
-        let(:notes_expected) { user_notes.first(notes_page_amount) }
+        let(:notes_expected) { user_notes.first(5) }
 
-        before { get :index, params: { page: 1, page_size: notes_page_amount, order: 'created_at ASC' } }
+        before { get :index, params: { page: 1, page_size: 5 } }
 
         it 'responds with the expected notes' do
-          expect(response.body).to eq(expected)
+          expect(response_body.to_json).to eq(expected)
         end
 
         it 'responds with 200 status' do
@@ -43,14 +41,12 @@ describe Api::V1::NotesController, type: :controller do
       end
 
       context 'when fetching only reviews' do
-        let(:random_note_type) { Note.note_types.keys.sample }
-        let(:user_notes) { create_list(:note, notes_amount, user: user, note_type: random_note_type) }
-        let(:notes_expected) { user_notes.sort_by(&:created_at).reverse }
+        let(:notes_expected) { user_notes.select { |note| note.note_type == 'review' } }
 
-        before { get :index, params: { note_type: random_note_type } }
+        before { get :index, params: { note_type: 'review' } }
 
         it 'responds with the expected notes' do
-          expect(response.body).to eq(expected)
+          expect(response_body.to_json).to eq(expected)
         end
 
         it 'responds with 200 status' do

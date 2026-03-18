@@ -31,11 +31,3 @@
 
 en:
   hello: "Hello world"
-  errors:
-    messages:
-      service_unavailable: "Service unavailable"
-      utility_service_unavailable: "Utility service is unavailable"
-      form_response_manager_service_unavailable: "Service is unavailable"
-      gateway_timeout: "Gateway timeout"
-      internal_server_error: "Internal server error"
-      circuit_open_error: "Service temporarily disabled"

@@ -8,8 +8,7 @@ module Api
       end
 
       def index_async
-        response = execute_async(RetrieveNotesWorker, current_user.id, index_async_params)
-        async_custom_response(response)
+        render json: notes_filtered, status: :ok, each_serializer: IndexNoteAsyncSerializer
       end
 
       def show
@@ -29,20 +28,15 @@ module Api
       end
 
       def filtering_params
-        params.permit(:note_type)
+        params.permit(:note_type, :book_id)
       end
 
       def order_param
         params[:order] || 'created_at DESC'
       end
 
-      def index_async_params
-        params.permit(:note_type)
-      end
-
       def note_params
-        params.require_nested(:note, %i[title content note_type book_id]).permit(:title,
-                                                                                 :content, :note_type, :book_id)
+        params.require(:note).permit(:title, :content, :note_type, :book_id)
       end
     end
   end
