@@ -41,8 +41,7 @@ module Api
       end
 
       def note_params
-        params.require_nested(:note, %i[title content note_type book_id]).permit(:title,
-                                                                                 :content, :note_type, :book_id)
+        params.require(:note).permit(:title, :content, :note_type, :book_id)
       end
     end
   end
