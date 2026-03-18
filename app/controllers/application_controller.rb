@@ -19,7 +19,6 @@ class ApplicationController < ActionController::Base
     render json: { errors: [error] }, status: status
   end
 
-
   def utility_code_header
     @utility_code_header ||= request.headers['Utility-ID']
   end
@@ -61,10 +60,10 @@ class ApplicationController < ActionController::Base
     end
 
     if resource.errors[:content].any? { |msg| msg.to_s.include?('words long or less') }
-      limit = resource.user.utility.class.name == 'NorthUtility' ? 50 : 60
+      limit = resource.book.utility.short_note_length
       return render_error(
         :content_too_long,
-        message: "Una resena no puede superar las #{limit} palabras",
+        message: "Una reseña no puede superar las #{limit} palabras",
         status: :unprocessable_entity
       )
     end

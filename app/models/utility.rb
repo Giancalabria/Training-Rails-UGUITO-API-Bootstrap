@@ -74,7 +74,19 @@ class Utility < ApplicationRecord
     self.class.name.underscore.split('_').first
   end
 
-  def note_length; end
+  def note_length(content)
+    count = content.split.length
+    range = [short_note_length, long_note_length]
+
+    case count
+    when 0..range[0]
+      'short'
+    when (range[0] + 1)..range[1]
+      'medium'
+    else
+      'long'
+    end
+  end
 
   private
 

@@ -22,10 +22,15 @@ class Note < ApplicationRecord
 
   def review_length
     return unless note_type == 'review'
+    if content.blank?
+      errors.add(:content, "can't be blank")
+      return
+    end
 
-    length = user.utility.note_length(content)
+    length = book.utility.note_length(content)
 
     return if length == 'short'
-    errors.add(:content, 'must be short for review notes')
+    max_words = book.utility.short_note_length
+    errors.add(:content, "must be #{max_words} words long or less")
   end
 end
