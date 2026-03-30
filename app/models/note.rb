@@ -19,18 +19,21 @@ class Note < ApplicationRecord
 
   belongs_to :user
   belongs_to :book
+  has_one :utility, through: :user
+
+  def note_length
+    return if content.blank?
+    book.utility.note_length(word_count)
+  end
+
+  def word_count
+    content.split.length
+  end
+
+  private
 
   def review_length
-    return unless note_type == 'review'
-    if content.blank?
-      errors.add(:content, "can't be blank")
-      return
-    end
-
-    length = book.utility.note_length(content)
-
-    return if length == 'short'
-    max_words = book.utility.short_note_length
-    errors.add(:content, "must be #{max_words} words long or less")
+    return unless note_type == 'review' && note_length != 'short'
+    errors.add(:content, "must be #{book.utility.short_note_length} words long or less")
   end
 end

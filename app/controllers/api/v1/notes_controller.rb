@@ -17,7 +17,7 @@ module Api
       end
 
       def create
-        note = current_user.notes.new(note_params)
+        note = current_user.notes.new(create_note_params)
         note.save
         render_resource(note)
       end
@@ -40,8 +40,10 @@ module Api
         params.permit(:note_type)
       end
 
-      def note_params
-        params.require(:note).permit(:title, :content, :note_type, :book_id)
+      def create_note_params
+        require_nested({ title: true, content: true, note_type: true, book_id: true },
+                       params[:note])
+        params.permit(note: %i[title content note_type book_id])[:note]
       end
     end
   end

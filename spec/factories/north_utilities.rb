@@ -2,6 +2,8 @@ FactoryBot.define do
   factory :north_utility, class: 'NorthUtility', parent: :utility do
     type { 'NorthUtility' }
     name { 'North Utility' }
+    short_note_length { 50 }
+    long_note_length { 100 }
     external_api_key { Faker::Lorem.word }
     external_api_secret { Faker::Lorem.word }
     base_url do

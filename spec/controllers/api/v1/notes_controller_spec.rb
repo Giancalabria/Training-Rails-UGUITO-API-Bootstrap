@@ -6,12 +6,12 @@ describe Api::V1::NotesController, type: :controller do
       include_context 'with authenticated user'
 
       let!(:notes_amount) { Faker::Number.between(from: 1, to: 10) }
-      let(:user_notes) { create_list(:note, notes_amount, user: user) }
-
+      let(:expected_fields) { %i[id title note_type content_length] }
       let!(:expected) do
         ActiveModel::Serializer::CollectionSerializer.new(notes_expected,
                                                           serializer: IndexNoteSerializer).to_json
       end
+      let(:user_notes) { create_list(:note, notes_amount, user: user) }
 
       context 'when fetching all notes from the user' do
         let(:notes_expected) { user_notes }
@@ -29,9 +29,9 @@ describe Api::V1::NotesController, type: :controller do
 
       context 'when fetching notes with pagination' do
         let(:notes_page_amount) { Faker::Number.between(from: 1, to: notes_amount) }
-        let(:notes_expected) { user_notes.first(notes_page_amount) }
+        let(:notes_expected) { user_notes(notes_page_amount) }
 
-        before { get :index, params: { page: 1, page_size: notes_page_amount, order: 'created_at ASC' } }
+        before { get :index, params: { page: 1, page_size: notes_page_amount } }
 
         it 'responds with the expected notes' do
           expect(response.body).to eq(expected)
@@ -70,10 +70,10 @@ describe Api::V1::NotesController, type: :controller do
     context 'when there is a user logged in' do
       include_context 'with authenticated user'
 
-      let(:expected) { ShowNoteSerializer.new(note, root: false).to_json }
-
       context 'when fetching a valid note' do
         let(:note) { create(:note, user: user) }
+        let(:expected) { ShowNoteSerializer.new(note, root: false).to_json }
+        let(:expected_fields) { ShowNoteSerializer._attributes.keys }
 
         before { get :show, params: { id: note.id } }
 
@@ -83,6 +83,12 @@ describe Api::V1::NotesController, type: :controller do
 
         it 'responds with 200 status' do
           expect(response).to have_http_status(:ok)
+        end
+
+        it 'includes all expected fields' do
+          response_body = JSON.parse(response.body)
+          expected_keys = %i[id title note_type word_count created_at content content_length user]
+          expect(response_body.keys.map(&:to_sym)).to match_array(expected_keys)
         end
       end
 
